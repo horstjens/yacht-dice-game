@@ -1,7 +1,5 @@
 import random
 # yacht spiel see wikipedia: https://en.wikipedia.org/wiki/Yacht_(dice_game)
-# einmal würfeln...
-# ich möchte 3 x würfeln, 
 # der spieler soll aussuchen welche würfel re-rollen
 categories = [
   "Ones",
