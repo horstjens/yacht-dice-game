@@ -1,6 +1,6 @@
 import random
-# yacht spiel see wikipedia: https://en.wikipedia.org/wiki/Yacht_(dice_game)
-# der spieler soll aussuchen welche würfel re-rollen
+# yacht dice-throing game see wikipedia: https://en.wikipedia.org/wiki/Yacht_(dice_game)
+
 categories = [
     "Ones",
     "Twos",
@@ -15,80 +15,156 @@ categories = [
     "Choice",
     "Yacht",
 ]
-command = "abcde"
-for wurf in (1,2,3):
+
+score = 0 
+print("score:", score)
+command = "abcde" # roll all dice
+for roll in (1,2,3):
     if "a" in command:
-        würfel1 = random.randint(1,6)
+        die1 = random.randint(1,6)
     if "b" in command:
-        würfel2 = random.randint(1,6)
+        die2 = random.randint(1,6)
     if "c" in command:
-        würfel3 = random.randint(1,6)
+        die3 = random.randint(1,6)
     if "d" in command:
-        würfel4 = random.randint(1,6)
+        die4 = random.randint(1,6)
     if "e" in command:
-        würfel5 = random.randint(1,6)
-    #wurf = 1
-    #print("dies ist wurf nummer {}".format(wurf))
-    if wurf == 1:
+        die5 = random.randint(1,6)
+
+    if roll == 1:
         print("      +---+---+---+---+---+")
         print("wurf# | a | b | c | d | e |")
     print("      +---+---+---+---+---+")
     print("  {}   | {} | {} | {} | {} | {} |".format(
-        wurf,
-        würfel1,
-        würfel2,
-        würfel3,
-        würfel4,
-        würfel5 ))
+        roll,
+        die1,
+        die2,
+        die3,
+        die4,
+        die5 ))
     print("      +---+---+---+---+---+")
-    if wurf < 3:
-        print("bitte jene Buchstaben geben, die nochmal würfeln sollen (z.B. ace)")
+    if roll < 3:
+        print("please enter the letter for dice that should roll again (like acd) and press ENTER")
         command = input(">>>")
-# ------------ auswertung -----------
-# --- spieler fragen welche category er spielen will
+# ask player for category
 for number, cat in enumerate(categories,1):
   print(number, ":", cat)
 while True:
-    command = input("welche categorie? >>>")
+    command = input("wich category do you want to play? >>>")
     try:
         index = int(command)
     except:
-        print("Bitte nur zahlen zwischen 1 und 12 eingeben")
-        continue # zurück zum schleifenanfang
-    # es war eine zahl, aber war es eine zahl zwischen 1 und 12?
-    if 0 < index < 13:
-        break # alles ok, verlasse die Schleife
-    print("es war eine zahl, aber keine gültige zahl")
+        print("This was not a number, please try again")
+        continue # back to the start of the while loop
+    # the player entered a number, but was it a valid number? 
+    if 1 <= index <= 12:
+        break # valid choice, exit the while loop
+    print("Number must be between 1 and 12, please try again")
 my_cat = categories[index-1]
-print("Sie haben gewählt:", my_cat)
+print("You play: ", my_cat)
+temp = [die1, die2, die3, die4, die5]
+temp.sort()
 
-# --- punkte ? ---
-punkte = 0
-# --- yacht: wenn 5x gleich augenzahl, dann 50 Punkte, sonst 0 Punkt
+# --- yacht: 5 equal numbers --> 50 points, otherwise 0 points
 if my_cat == "Yacht" :
-    # habe ich 5 x gleiche augenzahl ?
-    if würfel1 == würfel2 == würfel3 == würfel4 == würfel5:
-        print("super, eine echte Yacht! Sie haben 50 punkte!")
-        punkte += 50
+    if die1 == die2 == die3 == die4 == die5:
+        print("super, you rolled a yacht!  50 points!")
+        score += 50
     else:
-        print("leider keine Yacht, nur 0 Punkte")
+        print("sorry, no yacht you get0 points")
 
+# ----- choice: sum of all dice
 if my_cat == "Choice":
-    # summe aller Augen
-    augensumme = würfel1 + würfel2 + würfel3 + würfel4 + würfel5
-    print("choice ergibt", augensumme, "punkte.")
-    punkte += augensumme
+    sum_of_dice = sum(temp)    # this is the same as: sum_all = die1+die2+die3+die4+die5
+    print("sum =", sum_of_dice)
+    score += sum_of_dice
 
+# ------ big straight: 2,3,4,5,6  -> 30 points
 if my_cat == "Big Straight":
-    temp = [würfel1, würfel2, würfel3, würfel4, würfel5]
-    temp.sort()
     if temp == [2,3,4,5,6]:
-        print("super, 30 punkte")
-        punkte += 30
+        print("You get 30 points")
+        score += 30
     else:
-        print("leider nix")
+        print("sorry, only 0 points")
     
-# bitte selbständig die "Little Straight" programmieren
+# ------ littke straight: 1,2,3,4,5  -> 30 points    
+if my_cat == "Little Straight":
+    if temp == [1,2,3,4,5]:
+        print("You get 30 points")
+        score += 30
+    else:
+        print("sorry, only 0 points")
+
+# ----- four of a kind: > 4 times the points
+if my_cat == "Four-Of-A-Kind":
+    # not elegant:
+    # if (die1==die2==die3==die4) or (die2==die3==die4==die5) or ...
+    # more elegant:
+    for x in (1,2,3,4,5,6):
+        howmuch = temp.count(x)
+        if howmuch >= 4:
+            points= x*4
+            print("you get", points, "points")
+            score += points
+            break # escape the for loop
+    else:  # the for loop run through without break
+        print("sorry, only 0 points")
+
+#---- full house: 3 equals and 2 equals - > sum of all dice
+if my_cat == "Full House":
+    fullhouse = False
+    for x in (1,2,3,4,5,6):
+        howmuch1 = temp.count(x)
+        for y in (1,2,3,4,5,6):
+            if x==y:
+                continue    # jump to start of the for loop, proceed with next y
+            howmuch2 = temp.count(y)
+            if (howmuch1 == 3) and (howmuch2 == 2):
+                fullhouse = True
+                sum_of_dice = sum(temp) 
+                print("you get", sum_of_dice, "points")
+                score += sum_of_dice
+                break
+        if fullhouse:
+            break
+    else:  # x-loop without break
+        print("sorry, only 0 points")
+    # TODO: specail case yacht rolled but full house chosen
+
+
+# ---- ones : sum of ones
+if my_cat == "Ones":
+    howmuch = temp.count(1)
+    print("you get", howmuch, "points")
+    score += howmuch
+
+if my_cat == "Twos":
+    howmuch = temp.count(2)
+    print("you get", howmuch * 2, "points")
+    score += howmuch * 2
+
+if my_cat == "Threes":
+    howmuch = temp.count(3)
+    print("you get", howmuch * 3, "points")
+    score += howmuch * 3
+
+if my_cat == "Fours":
+    howmuch = temp.count(4)
+    print("you get", howmuch * 4, "points")
+    score += howmuch * 4
+
+if my_cat == "Fives":
+    howmuch = temp.count(5)
+    print("you get", howmuch * 5, "points")
+    score += howmuch * 5
+
+if my_cat == "Sixes":
+    howmuch = temp.count(6)
+    print("you get", howmuch * 6, "points")
+    score += howmuch * 6
+
+
+
 
 
 
