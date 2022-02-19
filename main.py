@@ -114,6 +114,7 @@ for turn in range(1,13): # range(1,13) produces the numbers from 1 to 12
         # more elegant:
         for x in (1,2,3,4,5,6):
             howmuch = temp.count(x)
+            # special rule: a yacht can also be played as a Four-of-a-kind
             if howmuch >= 4:
                 points= x*4
                 print("you get", points, "points")
@@ -141,7 +142,6 @@ for turn in range(1,13): # range(1,13) produces the numbers from 1 to 12
                 break
         else:  # x-loop without break
             print("sorry, only 0 points")
-        # TODO: specail case yacht rolled but full house chosen
 
     # ---- ones : sum of ones
     if my_cat == "Ones":
@@ -180,4 +180,6 @@ for turn in range(1,13): # range(1,13) produces the numbers from 1 to 12
     categories[index-1] += " (already played)"
 
 #-------------------
+print("maximum possible score is: 297")
 print("your final score is:", score)
+print("you reached {:.2f}% of the maximum score".format(score/297*100))
