@@ -5,5 +5,7 @@ eine Umsetzung des Würfelspiels "Yacht", siehe https://en.wikipedia.org/wiki/Ya
 
 ### how to play:
 
-type `python3 main.py`
+type:
+
+`python3 main.py`
 
