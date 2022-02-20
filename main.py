@@ -4,11 +4,6 @@ from dataclasses import dataclass
 # for github, see: https://github.com/horstjens/yacht-w-rfelspiel/blob/main/main.py
 # for repl, see: https://replit.com/@horstjens/yacht-wurfelspiel#main.py
 
-# ---- useful functions ---
-temp = []
-score = 0
-categories2 = [] # empty list
-
 def howmuch(x):
     """returns how often the value x is inside temp"""
     #print("calling howmuch with", x, "of array", temp)
@@ -152,6 +147,10 @@ class Cat:
 
 
 # ------ main program starts here ----------
+temp = []
+score = 0
+categories2 = [] # empty list
+
 
 Cat(name="Ones", function=howmuch, number=1, max_points=5, played=False, scored=0  )
 Cat("Twos", howmuch, 2, 10)
@@ -184,10 +183,10 @@ for turn in range(1, 13):  # range(1,13) produces the numbers from 1 to 12
     my_cat.scored = points
 
 # -------------------
-print("*-*-* summary of this game *-*-*")
-print("category             points: scored / max.")
+print("*-*-*-=== summary of this game ===-*-*-*")
+print("category           points: scored / max.")
 for cat in categories2:
-    print("{:<25}: reached {:>2} of {:>2}".format(cat.name, cat.scored, cat.max_points))
+    print("{:<20}: reached {:>2} of {:>2}".format(cat.name, cat.scored, cat.max_points))
 print("your final score is:", score)
 print("maximum possible score is: 297")
-print("you reached {:.2f}% of the maximum score".format(score / 297 * 100))
+print("you reached {:.2f} % of the maximum score".format(score / 297 * 100))
