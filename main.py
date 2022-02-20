@@ -7,6 +7,7 @@ from dataclasses import dataclass
 # ---- useful functions ---
 temp = []
 score = 0
+categories2 = [] # empty list
 
 def howmuch(x):
     """returns how often the value x is inside temp"""
@@ -57,36 +58,24 @@ def full_house():
     return 0
 
 
-categories2 = [] # empty list
-@dataclass
-class Cat:
-    name: str
-    function: any  # function object
-    number: int
-    played: bool = False # default value = False
-
-    def __post_init__(self):
-        categories2.append(self) # append this instance into categories2 list
-
-Cat(name="Ones", function=howmuch, number=1, played=False  )
-Cat("Twos", howmuch, 2)
-Cat("Threes", howmuch, 3)
-Cat("Fours", howmuch, 4),
-Cat("Fives", howmuch, 5),
-Cat("Sixes", howmuch, 6)
-Cat("Full House", full_house, 1)
-Cat("Four-Of-A-Kind", four_of_a_kind, 1),
-Cat("Little Straight", small_straight, 30)
-Cat("Big Straight", big_straight, 30)
-Cat("Choice", choice, 1)
-Cat("Yacht", is_yacht, 50)
-
+def calculate_points(cat):
+    """given a category and the temp array of dice, returns the points"""
+    # ------ calculate score --------------
+    function = cat.function
+    number = cat.number
+    if cat.name in ("Ones", "Twos", "Threes", "Fours", "Fives", "Sixes"):
+        points = function(number) * number
+    else:
+        points = function() * number
+    return points
 
 def ask():
     """ask player what category he wants to play. returns mycat"""
     for number, cat in enumerate(categories2, 1):  # iterating over the values of dictionary
         if not cat.played: # same as: if categories2[cat].played == False
-            print("{:>2}: {}".format(number,cat.name)) #{:>2} forces a leading space on numbers smaller than 10
+            # --- calculate points for each possible category
+            points = calculate_points(cat)
+            print("{:>2}: {:<16} --> {:>2} points of max. {:>2}".format(number,cat.name, points, cat.max_points)) #{:>2} forces a leading space on numbers smaller than 10
     while True:
         command = input("wich category do you want to play? >>>")
         # ---- guardians: validate the input -----
@@ -148,26 +137,57 @@ def roll():
             return [die1,die2, die3, die4, die5]
 
 
+@dataclass
+class Cat:
+    name: str
+    function: any  # function object as attribute
+    number: int
+    max_points: int
+    played: bool = False # default value = False
+    scored: int = 0      #
+
+
+    def __post_init__(self):
+        categories2.append(self) # append this instance into categories2 list
+
+
+# ------ main program starts here ----------
+
+Cat(name="Ones", function=howmuch, number=1, max_points=5, played=False, scored=0  )
+Cat("Twos", howmuch, 2, 10)
+Cat("Threes", howmuch, 3, 15)
+Cat("Fours", howmuch, 4, 20),
+Cat("Fives", howmuch, 5, 25),
+Cat("Sixes", howmuch, 6, 30)
+Cat("Full House", full_house, 1, 28) # 3 x 6  + 2 x 5 = 28
+Cat("Four-Of-A-Kind", four_of_a_kind, 1, 24 ) # 4 x 6 (even if 5 x 6 is thrown, only counts as 4 x 6)
+Cat("Little Straight", small_straight, 30, 30)
+Cat("Big Straight", big_straight, 30, 30)
+Cat("Choice", choice, 1, 30) # 5 x 6
+Cat("Yacht", is_yacht, 50,50)
+
+
 for turn in range(1, 13):  # range(1,13) produces the numbers from 1 to 12
     temp = roll()
+    temp.sort() # !
     my_cat = ask()
     print("You play: ", my_cat.name)
     #temp = [die1, die2, die3, die4, die5]
     temp.sort()
     function = my_cat.function
     number = my_cat.number
-    # ------ calculate score --------------
-    if my_cat.name in ("Ones", "Twos", "Threes", "Fours", "Fives", "Sixes"):
-        points = function(number) * number
-    else:
-        points = function() * number
+    points = calculate_points(my_cat)
     print("you get", points, "points")
     score += points
-
-    # ------------------------  remove selected category ----------
+    # ------------------------  update scored and played ----------
     my_cat.played = True
+    my_cat.scored = points
 
 # -------------------
-print("maximum possible score is: 297")
+print("*-*-* summary of this game *-*-*")
+print("category             points: scored / max.")
+for cat in categories2:
+    print("{:<25}: reached {:>2} of {:>2}".format(cat.name, cat.scored, cat.max_points))
 print("your final score is:", score)
+print("maximum possible score is: 297")
 print("you reached {:.2f}% of the maximum score".format(score / 297 * 100))
