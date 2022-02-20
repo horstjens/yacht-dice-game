@@ -1,5 +1,5 @@
 # yacht-dice-throwing game
-student group wasagasse
+
 
 a python text-only remake of the dice-throwing game "Yacht", siehe https://en.wikipedia.org/wiki/Yacht_(dice_game)
 
