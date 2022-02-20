@@ -110,6 +110,7 @@ def roll() -> list:
         print("throw# | a | b | c | d | e |")
         for t, line in enumerate(rolls, start=0):
             print("       +---+---+---+---+---+")
+            print("       | {} | {} | {} | {} | {} |".format( *[unicode_lookup[x] for x in rolls[t]]))
             print("  {}:   | {} | {} | {} | {} | {} |".format(t+1, *rolls[t]))
         print("       +---+---+---+---+---+")
         if throw < 3:
@@ -141,6 +142,14 @@ temp = []
 score = 0
 categories2 = [] # empty list
 
+unicode_lookup = {
+    1: "\u2680",
+    2: "\u2681",
+    3: "\u2682",
+    4: "\u2683",
+    5: "\u2684",
+    6: "\u2685",
+}
 
 Cat(name="Ones", function=howmuch, number=1, max_points=5, played=False, scored=0  )
 Cat("Twos", howmuch, 2, 10)
