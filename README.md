@@ -5,7 +5,7 @@ a python text-only remake of the dice-throwing game "Yacht", siehe https://en.wi
 
 how to play:
 type:
-```python3 main.py```
+```python3 yacht.py```
 
 example:
 ```
