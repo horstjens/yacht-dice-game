@@ -1,11 +1,10 @@
 import random
-
+from dataclasses import dataclass
 # yacht dice-throing game see wikipedia: https://en.wikipedia.org/wiki/Yacht_(dice_game)
 # for github, see: https://github.com/horstjens/yacht-w-rfelspiel/blob/main/main.py
 # for repl, see: https://replit.com/@horstjens/yacht-wurfelspiel#main.py
 
 # ---- useful functions ---
-
 temp = []
 score = 0
 
@@ -57,31 +56,37 @@ def full_house():
                 return sum(temp)
     return 0
 
-# category to play : (function to calculate points, score_multiplier, already_played)
-categories = {
-    "Ones": [howmuch,1, False],
-    "Twos": [howmuch,2, False],
-    "Threes": [howmuch, 3, False],
-    "Fours": [howmuch, 4, False],
-    "Fives": [howmuch, 5, False],
-    "Sixes": [howmuch,6, False],
-    "Full House": [full_house,1, False],
-    "Four-Of-A-Kind": [four_of_a_kind,1, False],
-    "Little Straight": [small_straight, 30, False],
-    "Big Straight": [big_straight, 30, False],
-    "Choice": [choice,1, False],
-    "Yacht": [is_yacht,  50, False],
-}
+
+categories2 = [] # empty list
+@dataclass
+class Cat:
+    name: str
+    function: any  # function object
+    number: int
+    played: bool = False # default value = False
+
+    def __post_init__(self):
+        categories2.append(self) # append this instance into categories2 list
+
+Cat(name="Ones", function=howmuch, number=1, played=False  )
+Cat("Twos", howmuch, 2)
+Cat("Threes", howmuch, 3)
+Cat("Fours", howmuch, 4),
+Cat("Fives", howmuch, 5),
+Cat("Sixes", howmuch, 6)
+Cat("Full House", full_house, 1)
+Cat("Four-Of-A-Kind", four_of_a_kind, 1),
+Cat("Little Straight", small_straight, 30)
+Cat("Big Straight", big_straight, 30)
+Cat("Choice", choice, 1)
+Cat("Yacht", is_yacht, 50)
 
 
 def ask():
     """ask player what category he wants to play. returns mycat"""
-     # ask player for category
-    for number, cat in enumerate(categories, 1):
-        #prefix = "(already played:)" if categories[cat][2] else ""
-        if not categories[cat][2]:
-            #print(number, ":", prefix, cat)
-            print("{:>2}: {}".format(number,cat)) #{:>2} forces a leading space on numbers smaller than 10
+    for number, cat in enumerate(categories2, 1):  # iterating over the values of dictionary
+        if not cat.played: # same as: if categories2[cat].played == False
+            print("{:>2}: {}".format(number,cat.name)) #{:>2} forces a leading space on numbers smaller than 10
     while True:
         command = input("wich category do you want to play? >>>")
         # ---- guardians: validate the input -----
@@ -94,15 +99,13 @@ def ask():
         if not (1 <= index <= 12):
             print("Number must be between 1 and 12, please try again")
             continue
-        my_cat = list(categories.keys())[index - 1]
-        if categories[my_cat][2]: # == True
+        my_cat = categories2[index-1] # because index start always with 0 in python
+        if my_cat.played:
             print("Please choose a category that was not already played")
             continue
         # ---- input has passed all guardians ------
         return my_cat
-        #break  # valid choice, exit the while loop
     # -------- end of while loop -------
-    
 
 def roll():
     """roll dice three times, returns temp array with dice values"""
@@ -143,19 +146,18 @@ def roll():
         else:
             print("  ==========================")
             return [die1,die2, die3, die4, die5]
-        
 
 
 for turn in range(1, 13):  # range(1,13) produces the numbers from 1 to 12
     temp = roll()
     my_cat = ask()
-    print("You play: ", my_cat)
+    print("You play: ", my_cat.name)
     #temp = [die1, die2, die3, die4, die5]
     temp.sort()
-    function = categories[my_cat][0]
-    number = categories[my_cat][1]
+    function = my_cat.function
+    number = my_cat.number
     # ------ calculate score --------------
-    if my_cat in ("Ones", "Twos", "Threes", "Fours", "Fives", "Sixes"):
+    if my_cat.name in ("Ones", "Twos", "Threes", "Fours", "Fives", "Sixes"):
         points = function(number) * number
     else:
         points = function() * number
@@ -163,7 +165,7 @@ for turn in range(1, 13):  # range(1,13) produces the numbers from 1 to 12
     score += points
 
     # ------------------------  remove selected category ----------
-    categories[my_cat][2] = True # mark as already played
+    my_cat.played = True
 
 # -------------------
 print("maximum possible score is: 297")
