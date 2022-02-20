@@ -113,8 +113,10 @@ for turn in range(1, 13):  # range(1,13) produces the numbers from 1 to 12
             command = input(">>>")
     # ask player for category
     for number, cat in enumerate(categories, 1):
-        prefix = "(already played:)" if categories[cat][2] else ""
-        print(number, ":", prefix, cat)
+        #prefix = "(already played:)" if categories[cat][2] else ""
+        if not categories[cat][2]:
+            #print(number, ":", prefix, cat)
+            print(number, ":", cat)
     while True:
         command = input("wich category do you want to play? >>>")
         try:
