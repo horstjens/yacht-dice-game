@@ -25,10 +25,10 @@ def is_straight(start_value:int=1):
         return True if temp == [2,3,4,5,6] else False
     raise ValueError("start_value must be 1 or 2")
 
-def small_straight():
+def is_small_straight():
     return is_straight(start_value=1 )
 
-def big_straight():
+def is_big_straight():
     return is_straight(start_value=2 )
 
 def four_of_a_kind():
@@ -160,8 +160,8 @@ Cat("Fives", howmuch, 5, 25),
 Cat("Sixes", howmuch, 6, 30)
 Cat("Full House", full_house, 1, 28) # 3 x 6  + 2 x 5 = 28
 Cat("Four-Of-A-Kind", four_of_a_kind, 1, 24 ) # 4 x 6 (even if 5 x 6 is thrown, only counts as 4 x 6)
-Cat("Little Straight", small_straight, 30, 30)
-Cat("Big Straight", big_straight, 30, 30)
+Cat("Little Straight", is_small_straight, 30, 30)
+Cat("Big Straight", is_big_straight, 30, 30)
 Cat("Choice", choice, 1, 30) # 5 x 6
 Cat("Yacht", is_yacht, 50,50)
 
