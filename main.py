@@ -18,8 +18,7 @@ def is_yacht():
     """returns True if temp has 5 equal numbers"""
     if temp[0] == temp[1] == temp[2] == temp[3] == temp[4]:
         return True
-    #else:
-    return False
+    return False   # else: is not necessary because previous line was a return statement
 
 def is_straight(start_value:int=1):
     """returns True if array is a straight
@@ -38,7 +37,7 @@ def big_straight():
     return is_straight(start_value=2 )
 
 def four_of_a_kind():
-    """returns dice value times 4 if the dice value exist 4 (or 5)  times in array,
+    """returns dice value times 4 if the dice value exist 4 (or 5)  times in temp,
        otherwise return 0"""
     for x in (1,2,3,4,5,6):
         if temp.count(x) >= 4:
@@ -58,7 +57,7 @@ def full_house():
                 return sum(temp)
     return 0
 
-# category to play, (function to calculate points, score_multiplier, already_played)
+# category to play : (function to calculate points, score_multiplier, already_played)
 categories = {
     "Ones": [howmuch,1, False],
     "Twos": [howmuch,2, False],
@@ -75,12 +74,42 @@ categories = {
 }
 
 
-for turn in range(1, 13):  # range(1,13) produces the numbers from 1 to 12
+def ask():
+    """ask player what category he wants to play. returns mycat"""
+     # ask player for category
+    for number, cat in enumerate(categories, 1):
+        #prefix = "(already played:)" if categories[cat][2] else ""
+        if not categories[cat][2]:
+            #print(number, ":", prefix, cat)
+            print("{:>2}: {}".format(number,cat)) #{:>2} forces a leading space on numbers smaller than 10
+    while True:
+        command = input("wich category do you want to play? >>>")
+        # ---- guardians: validate the input -----
+        try:
+            index = int(command)
+        except:
+            print("This was not a number, please try again")
+            continue  # back to the start of the while loop
+        # the player entered a number, but was it a valid number?
+        if not (1 <= index <= 12):
+            print("Number must be between 1 and 12, please try again")
+            continue
+        my_cat = list(categories.keys())[index - 1]
+        if categories[my_cat][2]: # == True
+            print("Please choose a category that was not already played")
+            continue
+        # ---- input has passed all guardians ------
+        return my_cat
+        #break  # valid choice, exit the while loop
+    # -------- end of while loop -------
+    
+
+def roll():
+    """roll dice three times, returns temp array with dice values"""
     print("=========================================================")
     print("----- this is turn: {} --------- your score is: {} ------".format(turn, score))
     print("=========================================================")
     rolls = []
-
     command = "abcde"  # roll all dice
     for throw in (1, 2, 3):
         if "a" in command:
@@ -99,7 +128,7 @@ for turn in range(1, 13):  # range(1,13) produces the numbers from 1 to 12
         print("throw# | a | b | c | d | e |")
         for t, line in enumerate(rolls, start=0):
             print("       +---+---+---+---+---+")
-            print("  {}    | {} | {} | {} | {} | {} |".format(
+            print("  {}:   | {} | {} | {} | {} | {} |".format(
                     t+1,
                     rolls[t][0],
                     rolls[t][1],
@@ -107,36 +136,21 @@ for turn in range(1, 13):  # range(1,13) produces the numbers from 1 to 12
                     rolls[t][3],
                     rolls[t][4],
                     ))
-        print("      +---+---+---+---+---+")
+        print("       +---+---+---+---+---+")
         if throw < 3:
             print("please enter the letter(s) for dice that should roll again (like acd):")
             command = input(">>>")
-    # ask player for category
-    for number, cat in enumerate(categories, 1):
-        #prefix = "(already played:)" if categories[cat][2] else ""
-        if not categories[cat][2]:
-            #print(number, ":", prefix, cat)
-            print(number, ":", cat)
-    while True:
-        command = input("wich category do you want to play? >>>")
-        try:
-            index = int(command)
-        except:
-            print("This was not a number, please try again")
-            continue  # back to the start of the while loop
-        # the player entered a number, but was it a valid number?
-        if not (1 <= index <= 12):
-            print("Number must be between 1 and 12, please try again")
-            continue
-        my_cat = list(categories.keys())[index - 1]
-        if categories[my_cat][2]: # == True
-            print("Please choose a category that was not already played")
-            continue
-        # ----
-        break  # valid choice, exit the while loop
-    # -------- end of while loop -------
+        else:
+            print("  ==========================")
+            return [die1,die2, die3, die4, die5]
+        
+
+
+for turn in range(1, 13):  # range(1,13) produces the numbers from 1 to 12
+    temp = roll()
+    my_cat = ask()
     print("You play: ", my_cat)
-    temp = [die1, die2, die3, die4, die5]
+    #temp = [die1, die2, die3, die4, die5]
     temp.sort()
     function = categories[my_cat][0]
     number = categories[my_cat][1]
@@ -149,8 +163,6 @@ for turn in range(1, 13):  # range(1,13) produces the numbers from 1 to 12
     score += points
 
     # ------------------------  remove selected category ----------
-    # (dont really remove, just rename it)
-    # my_cat = categories[index-1]
     categories[my_cat][2] = True # mark as already played
 
 # -------------------
