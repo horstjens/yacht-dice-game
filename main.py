@@ -79,9 +79,10 @@ for turn in range(1, 13):  # range(1,13) produces the numbers from 1 to 12
     print("=========================================================")
     print("----- this is turn: {} --------- your score is: {} ------".format(turn, score))
     print("=========================================================")
+    rolls = []
 
     command = "abcde"  # roll all dice
-    for roll in (1, 2, 3):
+    for throw in (1, 2, 3):
         if "a" in command:
             die1 = random.randint(1, 6)
         if "b" in command:
@@ -92,20 +93,22 @@ for turn in range(1, 13):  # range(1,13) produces the numbers from 1 to 12
             die4 = random.randint(1, 6)
         if "e" in command:
             die5 = random.randint(1, 6)
-
-        if roll == 1:
-            print("      +---+---+---+---+---+")
-            print("roll# | a | b | c | d | e |")
+        rolls.append([die1, die2, die3, die4, die5])
+        #if roll == 1:
+        print("       +---+---+---+---+---+")
+        print("throw# | a | b | c | d | e |")
+        for t, line in enumerate(rolls, start=0):
+            print("       +---+---+---+---+---+")
+            print("  {}    | {} | {} | {} | {} | {} |".format(
+                    t+1,
+                    rolls[t][0],
+                    rolls[t][1],
+                    rolls[t][2],
+                    rolls[t][3],
+                    rolls[t][4],
+                    ))
         print("      +---+---+---+---+---+")
-        print("  {}   | {} | {} | {} | {} | {} |".format(
-            roll,
-            die1,
-            die2,
-            die3,
-            die4,
-            die5))
-        print("      +---+---+---+---+---+")
-        if roll < 3:
+        if throw < 3:
             print("please enter the letter(s) for dice that should roll again (like acd):")
             command = input(">>>")
     # ask player for category
