@@ -1,49 +1,46 @@
+# yacht dice-throing game see wikipedia: https://en.wikipedia.org/wiki/Yacht_(dice_game)
+# for github, see: https://github.com/horstjens/yacht-dice-game
+# license: GPL3, 2022 by Horst JENS, horstjens@gmail.com https://spielend-programmieren.at
+
 import random
 from dataclasses import dataclass
-# yacht dice-throing game see wikipedia: https://en.wikipedia.org/wiki/Yacht_(dice_game)
-# for github, see: https://github.com/horstjens/yacht-w-rfelspiel/blob/main/main.py
-# for repl, see: https://replit.com/@horstjens/yacht-wurfelspiel#main.py
 
-def howmuch(x):
-    """returns how often the value x is inside temp"""
-    #print("calling howmuch with", x, "of array", temp)
+def howmuch(x: int) -> int:
+    """Returns how often the value x is inside temp."""
     return temp.count(x)
 
-def is_yacht():
-    """returns True if temp has 5 equal numbers"""
+def is_yacht() -> bool:
+    """Returns True if temp has 5 equal numbers."""
     if temp[0] == temp[1] == temp[2] == temp[3] == temp[4]:
         return True
     return False   # else: is not necessary because previous line was a return statement
 
-def is_straight(start_value:int=1):
-    """returns True if array is a straight
-    param start_value: 1 or 2. 1 for small straight, 2 for big straight
-    """
+def is_straight(start_value:int=1) -> bool:
+    """Returns True if array is a straight param start_value: 1 or 2. 1 for small straight, 2 for big straight."""
     if start_value == 1:
         return True if temp == [1,2,3,4,5] else False
     elif start_value == 2:
         return True if temp == [2,3,4,5,6] else False
     raise ValueError("start_value must be 1 or 2")
 
-def is_small_straight():
+def is_small_straight() -> bool:
     return is_straight(start_value=1 )
 
-def is_big_straight():
+def is_big_straight() -> bool:
     return is_straight(start_value=2 )
 
-def four_of_a_kind():
-    """returns dice value times 4 if the dice value exist 4 (or 5)  times in temp,
-       otherwise return 0"""
+def four_of_a_kind() -> int:
+    """Returns dice value times 4 if the dice value exist 4 (or 5)  times in temp,  otherwise return 0."""
     for x in (1,2,3,4,5,6):
         if temp.count(x) >= 4:
             return x * 4
     return 0
 
-def choice():
+def choice() -> int:
     return sum(temp)
 
-def full_house():
-    """returns all dice values if temp is a full house (3 equals and 2 equals)"""
+def full_house() -> int:
+    """Returns all dice values if temp is a full house (3 equals and 2 equals)."""
     for x in (1,2,3,4,5,6):
         for y in (1,2,3,4,5,6):
             if y==x:
@@ -53,9 +50,8 @@ def full_house():
     return 0
 
 
-def calculate_points(cat):
-    """given a category and the temp array of dice, returns the points"""
-    # ------ calculate score --------------
+def calculate_points(cat:any) -> int:
+    """Takes a dataclass category instance and  returns the points."""
     function = cat.function
     number = cat.number
     if cat.name in ("Ones", "Twos", "Threes", "Fours", "Fives", "Sixes"):
@@ -64,8 +60,8 @@ def calculate_points(cat):
         points = function() * number
     return points
 
-def ask():
-    """ask player what category he wants to play. returns mycat"""
+def ask() -> any:
+    """Ask player what category he wants to play. Returns a category instance."""
     for number, cat in enumerate(categories2, 1):  # iterating over the values of dictionary
         if not cat.played: # same as: if categories2[cat].played == False
             # --- calculate points for each possible category
@@ -91,8 +87,8 @@ def ask():
         return my_cat
     # -------- end of while loop -------
 
-def roll():
-    """roll dice three times, returns temp array with dice values"""
+def roll() -> list:
+    """Roll the dice three times, returns temp array with dice values."""
     print("=========================================================")
     print("----- this is turn: {} --------- your score is: {} ------".format(turn, score))
     print("=========================================================")
@@ -110,19 +106,11 @@ def roll():
         if "e" in command:
             die5 = random.randint(1, 6)
         rolls.append([die1, die2, die3, die4, die5])
-        #if roll == 1:
         print("       +---+---+---+---+---+")
         print("throw# | a | b | c | d | e |")
         for t, line in enumerate(rolls, start=0):
             print("       +---+---+---+---+---+")
-            print("  {}:   | {} | {} | {} | {} | {} |".format(
-                    t+1,
-                    rolls[t][0],
-                    rolls[t][1],
-                    rolls[t][2],
-                    rolls[t][3],
-                    rolls[t][4],
-                    ))
+            print("  {}:   | {} | {} | {} | {} | {} |".format(t+1, *rolls[t]))
         print("       +---+---+---+---+---+")
         if throw < 3:
             print("please enter the letter(s) for dice that should roll again (like acd):")
@@ -134,6 +122,7 @@ def roll():
 
 @dataclass
 class Cat:
+    """A class to hold categories that the user can play."""
     name: str
     function: any  # function object as attribute
     number: int
@@ -142,8 +131,9 @@ class Cat:
     scored: int = 0      #
 
 
-    def __post_init__(self):
-        categories2.append(self) # append this instance into categories2 list
+    def __post_init__(self) -> None:
+        """Appends the newly created class instance to the list 'categories2'."""
+        categories2.append(self)
 
 
 # ------ main program starts here ----------
