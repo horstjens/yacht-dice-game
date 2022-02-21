@@ -76,8 +76,8 @@ def ask() -> any:
             print("This was not a number, please try again")
             continue  # back to the start of the while loop
         # the player entered a number, but was it a valid number?
-        if not (1 <= index <= 12):
-            print("Number must be between 1 and 12, please try again")
+        if not (1 <= index <= len(categories2)):
+            print("Number must be between 1 and {}, please try again".format(len(categories2)))
             continue
         my_cat = categories2[index-1] # because index start always with 0 in python
         if my_cat.played:
@@ -165,7 +165,7 @@ Cat("Choice", choice, 1, 30) # 5 x 6
 Cat("Yacht", is_yacht, 50,50)
 
 
-for turn in range(1, 13):  # range(1,13) produces the numbers from 1 to 12
+for turn in range(1, len(categories2)+1):  # range(1,13) produces the numbers from 1 to 12
     temp = roll()
     temp.sort() # !
     my_cat = ask()
