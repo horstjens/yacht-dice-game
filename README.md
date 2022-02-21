@@ -1,13 +1,19 @@
 # yacht-dice-throwing game
 
 
-a python text-only remake of the dice-throwing game "Yacht", siehe https://en.wikipedia.org/wiki/Yacht_(dice_game)
+* a python text-only remake of the dice-throwing game "Yacht", see https://en.wikipedia.org/wiki/Yacht_(dice_game)
+* a python text-only remake of the dice-throwing game ">ahtzee", see https://en.wikipedia.org/wiki/Yahtzee
 
 how to play:
 type:
 ```python3 yacht.py```
 
-example:
+or
+
+```python3 yahtzee.py```
+
+example screenshot:
+
 ```
        +---+---+---+---+---+
 throw# | a | b | c | d | e |
