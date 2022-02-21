@@ -2,7 +2,7 @@
 
 
 * a python text-only remake of the dice-throwing game "Yacht", see https://en.wikipedia.org/wiki/Yacht_(dice_game)
-* a python text-only remake of the dice-throwing game ">ahtzee", see https://en.wikipedia.org/wiki/Yahtzee
+* a python text-only remake of the dice-throwing game "Yahtzee", see https://en.wikipedia.org/wiki/Yahtzee
 
 how to play:
 type:
